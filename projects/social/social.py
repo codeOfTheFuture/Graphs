@@ -1,3 +1,7 @@
+from random import shuffle
+from itertools import combinations
+from util import Queue
+
 class User:
     def __init__(self, name):
         self.name = name
@@ -42,11 +46,18 @@ class SocialGraph:
         self.last_id = 0
         self.users = {}
         self.friendships = {}
-        # !!!! IMPLEMENT ME
+        
+        for i in range(1, num_users + 1):
+            self.add_user(i)
+        
+        friendships = list(combinations(range(num_users), 2))
+        
+        shuffle(friendships)
 
-        # Add users
+        for j in range(num_users * avg_friendships // 2):
+            self.add_friendship(friendships[j][0] + 1, friendships[i][1] + 1)
 
-        # Create friendships
+
 
     def get_all_social_paths(self, user_id):
         """
@@ -58,7 +69,22 @@ class SocialGraph:
         The key is the friend's ID and the value is the path.
         """
         visited = {}  # Note that this is a dictionary, not a set
-        # !!!! IMPLEMENT ME
+        
+        qq = Queue()
+        qq.enqueue([user_id])
+
+        while qq.size() > 0:
+            current_path = qq.dequeue()
+            current_vert = current_path[-1]
+
+            if current_vert not in visited:
+                visited[current_vert] = current_path
+
+                for i in self.friendships[current_vert]:
+                    new_path = list(current_path)
+                    new_path.append(i)
+                    qq.enqueue(new_path)
+
         return visited
 
 
